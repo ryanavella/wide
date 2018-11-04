@@ -15,6 +15,39 @@ type Uint128 struct {
 	lo uint64
 }
 
+// String returns a hexadecimal representation of a Uint128
+func (x Uint128) String() string {
+	if x.hi == 0 {
+		return fmt.Sprintf("%#x", x.lo) // ignore leading 0's
+	}
+	return fmt.Sprintf("%#x%016x", x.hi, x.lo)
+}
+
+// Uint128FromBigInt returns a Uint128 from a big.Int
+func Uint128FromBigInt(a *big.Int) (z Uint128) {
+	z.lo = a.Uint64()
+	b := new(big.Int).Rsh(a, int64Size)
+	z.hi = b.Uint64()
+	return z
+}
+
+// Uint128FromBits returns a Uint128 from the high and low 64 bits
+func Uint128FromBits(hi, lo uint64) Uint128 {
+	return Uint128{hi: hi, lo: lo}
+}
+
+// Uint128FromUint64 returns a Uint128 from a uint64
+func Uint128FromUint64(x uint64) Uint128 {
+	return Uint128{hi: 0, lo: x}
+}
+
+// RandUint128 returns a pseudo-random Uint128
+func RandUint128() (z Uint128) {
+	z.hi = rand.Uint64()
+	z.lo = rand.Uint64()
+	return z
+}
+
 // Add returns the sum of two Uint128's
 func (x Uint128) Add(y Uint128) (z Uint128) {
 	z.hi = x.hi + y.hi
@@ -301,13 +334,6 @@ func (x Uint128) Or(y Uint128) (z Uint128) {
 	return z
 }
 
-// RandUint128 returns a pseudo-random Uint128
-func RandUint128() (z Uint128) {
-	z.hi = rand.Uint64()
-	z.lo = rand.Uint64()
-	return z
-}
-
 // RShift returns a Uint128 right-shifted by 1
 func (x Uint128) RShift() (z Uint128) {
 	z.hi = x.hi >> 1
@@ -339,14 +365,6 @@ func (x Uint128) RShift128(y Uint128) (z Uint128) {
 	return x.RShiftN(uint(y.lo))
 }
 
-// String returns a hexadecimal representation of a Uint128
-func (x Uint128) String() string {
-	if x.hi == 0 {
-		return fmt.Sprintf("%#x", x.lo) // ignore leading 0's
-	}
-	return fmt.Sprintf("%#x%016x", x.hi, x.lo)
-}
-
 // Sub returns the difference of two Uint128's
 func (x Uint128) Sub(y Uint128) (z Uint128) {
 	z.hi = x.hi - y.hi
@@ -355,24 +373,6 @@ func (x Uint128) Sub(y Uint128) (z Uint128) {
 		z.hi--
 	}
 	return z
-}
-
-// Uint128FromBigInt returns a Uint128 from a big.Int
-func Uint128FromBigInt(a *big.Int) (z Uint128) {
-	z.lo = a.Uint64()
-	b := new(big.Int).Rsh(a, int64Size)
-	z.hi = b.Uint64()
-	return z
-}
-
-// Uint128FromBits returns a Uint128 from the high and low 64 bits
-func Uint128FromBits(hi, lo uint64) Uint128 {
-	return Uint128{hi: hi, lo: lo}
-}
-
-// Uint128FromUint64 returns a Uint128 from a uint64
-func Uint128FromUint64(x uint64) Uint128 {
-	return Uint128{hi: 0, lo: x}
 }
 
 // Uint64 returns a representation of the Uint128 as the builtin uint64

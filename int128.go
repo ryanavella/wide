@@ -28,6 +28,37 @@ func (x Int128) String() string {
 	}
 }
 
+// Int128FromBigInt returns a Int128 from a big.Int
+func Int128FromBigInt(a *big.Int) (z Int128) {
+	var y Uint128
+	neg := false
+	if a.Sign() == -1 {
+		a = new(big.Int).Neg(a)
+		neg = true
+	}
+	y.lo = a.Uint64()
+	b := new(big.Int).Rsh(a, int64Size)
+	y.hi = b.Uint64()
+	z = y.Int128()
+	if neg {
+		return z.Neg()
+	}
+	return z
+}
+
+// Int128FromHiLo returns a Int128 from the high and low 64 bits
+func Int128FromHiLo(hi int64, lo uint64) Int128 {
+	return Int128{hi: hi, lo: lo}
+}
+
+// Int128FromInt64 returns a Int128 from an int64
+func Int128FromInt64(x int64) Int128 {
+	if x >= 0 {
+		return Int128{hi: 0, lo: uint64(x)}
+	}
+	return Int128{hi: -1, lo: uint64(x)}
+}
+
 // Abs returns the absolute value of an Int128's
 func (x Int128) Abs() Int128 {
 	if x.IsNeg() {
@@ -193,37 +224,6 @@ func (x Int128) IsPos() bool {
 // IsUint64 checks if the Int128 can be represented as a uint64 without wrapping
 func (x Int128) IsUint64() bool {
 	return x.hi == 0
-}
-
-// Int128FromBigInt returns a Int128 from a big.Int
-func Int128FromBigInt(a *big.Int) (z Int128) {
-	var y Uint128
-	neg := false
-	if a.Sign() == -1 {
-		a = new(big.Int).Neg(a)
-		neg = true
-	}
-	y.lo = a.Uint64()
-	b := new(big.Int).Rsh(a, int64Size)
-	y.hi = b.Uint64()
-	z = y.Int128()
-	if neg {
-		return z.Neg()
-	}
-	return z
-}
-
-// Int128FromHiLo returns a Int128 from the high and low 64 bits
-func Int128FromHiLo(hi int64, lo uint64) Int128 {
-	return Int128{hi: hi, lo: lo}
-}
-
-// Int128FromInt64 returns a Int128 from an int64
-func Int128FromInt64(x int64) Int128 {
-	if x >= 0 {
-		return Int128{hi: 0, lo: uint64(x)}
-	}
-	return Int128{hi: -1, lo: uint64(x)}
 }
 
 // Int64 returns a representation of the Int128 as the builtin int64
