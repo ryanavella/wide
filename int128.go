@@ -337,16 +337,12 @@ func (x Int128) Nand(y Int128) (z Int128) {
 
 // Neg returns the additive inverse of an Int128
 func (x Int128) Neg() (z Int128) {
-	/* TODO: Something is wrong about the below
 	z.hi = -x.hi
 	z.lo = -x.lo
-	if z.lo > x.lo {
+	if z.lo > 0 {
 		z.hi--
 	}
 	return z
-	*/
-	var zero Int128
-	return zero.Sub(x)
 }
 
 // Nor returns the bitwise NOR of two Int128's
@@ -417,15 +413,12 @@ func (x Int128) Sign() int {
 
 // Sub returns the difference of two Int128's
 func (x Int128) Sub(y Int128) (z Int128) {
-	/* TODO: Something is wrong about the below
 	z.hi = x.hi - y.hi
 	z.lo = x.lo - y.lo
 	if z.lo > x.lo {
 		z.hi--
 	}
 	return z
-	*/
-	return x.Uint128().Sub(y.Uint128()).Int128()
 }
 
 // Uint128 returns a Uint128 representation of a Int128

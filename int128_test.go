@@ -407,6 +407,8 @@ func TestNegInt128(t *testing.T) {
 	}{
 		{Int128{hi: 0, lo: 0}, Int128{hi: 0, lo: 0}},
 		{Int128{hi: 0, lo: 1}, Int128{hi: -1, lo: maxUint64}},
+		{Int128{hi: 0, lo: 2}, Int128{hi: -1, lo: maxUint64 - 1}},
+		{Int128{hi: -1, lo: maxUint64}, Int128{hi: 0, lo: 1}},
 		{Int128{hi: -1, lo: maxUint64}, Int128{hi: 0, lo: 1}},
 		{Int128{hi: minInt64, lo: 0}, Int128{hi: minInt64, lo: 0}}, // most negative number has no positive counterpart
 	}
@@ -529,7 +531,14 @@ func TestSubInt128(t *testing.T) {
 	}{
 		{Int128{hi: 0, lo: 1}, Int128{hi: 0, lo: 2}, Int128{hi: 0, lo: 3}},
 		{Int128{hi: 0, lo: 2}, Int128{hi: 0, lo: 1}, Int128{hi: 0, lo: 3}},
-		{Int128{hi: -1, lo: maxUint64}, Int128{hi: 0, lo: 1}, Int128{hi: 0, lo: 0}},
+		{Int128{hi: 1, lo: 0}, Int128{hi: 2, lo: 0}, Int128{hi: 3, lo: 0}},
+		{Int128{hi: 2, lo: 0}, Int128{hi: 1, lo: 0}, Int128{hi: 3, lo: 0}},
+		{Int128{hi: 0, lo: maxUint64}, Int128{hi: 0, lo: 1}, Int128{hi: 1, lo: 0}},
+		{Int128{hi: 0, lo: 1}, Int128{hi: 0, lo: maxUint64}, Int128{hi: 1, lo: 0}},
+		{Int128{hi: maxInt64, lo: 0}, Int128{hi: 1, lo: 0}, Int128{hi: minInt64, lo: 0}},
+		{Int128{hi: 1, lo: 0}, Int128{hi: maxInt64, lo: 0}, Int128{hi: minInt64, lo: 0}},
+		{Int128{hi: maxInt64, lo: maxUint64}, Int128{hi: 0, lo: 1}, Int128{hi: minInt64, lo: 0}},
+		{Int128{hi: 0, lo: 1}, Int128{hi: maxInt64, lo: maxUint64}, Int128{hi: minInt64, lo: 0}},
 	}
 	for _, test := range tests {
 		result := test.op1.Sub(test.op2)
