@@ -110,6 +110,28 @@ func TestCmpUint128(t *testing.T) {
 	}
 }
 
+func TestDivUint128(t *testing.T) {
+	tests := []struct {
+		expected Uint128
+		op2      Uint128
+		op1      Uint128
+	}{
+		{Uint128{hi: 0, lo: 3}, Uint128{hi: 0, lo: 5}, Uint128{hi: 0, lo: 15}},
+		{Uint128{hi: 0, lo: 5}, Uint128{hi: 0, lo: 3}, Uint128{hi: 0, lo: 15}},
+		{Uint128{hi: 3, lo: 0}, Uint128{hi: 0, lo: 5}, Uint128{hi: 15, lo: 0}},
+		{Uint128{hi: 5, lo: 0}, Uint128{hi: 0, lo: 3}, Uint128{hi: 15, lo: 0}},
+		{Uint128{hi: 0, lo: 1 << 63}, Uint128{hi: 0, lo: 2}, Uint128{hi: 1, lo: 0}},
+		{Uint128{hi: 0, lo: 2}, Uint128{hi: 0, lo: 1 << 63}, Uint128{hi: 1, lo: 0}},
+		{Uint128{hi: 0, lo: 0xFFFFFFFFFFFFFFFF}, Uint128{hi: 0, lo: 0xFFFFFFFFFFFFFFFF}, Uint128{hi: 0xFFFFFFFFFFFFFFFE, lo: 1}},
+	}
+	for _, test := range tests {
+		result := test.op1.Div(test.op2)
+		if result.lo != test.expected.lo || result.hi != test.expected.hi {
+			t.Errorf("Expected %s.Div(%s) == %s, got: %s", test.op1, test.op2, test.expected, result)
+		}
+	}
+}
+
 func TestDivModUint128(t *testing.T) {
 	tests := []struct {
 		op1       Uint128

@@ -111,6 +111,33 @@ func TestCmpInt128(t *testing.T) {
 	}
 }
 
+func TestDivInt128(t *testing.T) {
+	tests := []struct {
+		expected Int128
+		op2      Int128
+		op1      Int128
+	}{
+		// Some basic division tests with all-positive arguments
+		{Int128{hi: 0, lo: 3}, Int128{hi: 0, lo: 5}, Int128{hi: 0, lo: 15}},
+		{Int128{hi: 0, lo: 5}, Int128{hi: 0, lo: 3}, Int128{hi: 0, lo: 15}},
+		{Int128{hi: 3, lo: 0}, Int128{hi: 0, lo: 5}, Int128{hi: 15, lo: 0}},
+		{Int128{hi: 5, lo: 0}, Int128{hi: 0, lo: 3}, Int128{hi: 15, lo: 0}},
+		{Int128{hi: 0, lo: 1 << 63}, Int128{hi: 0, lo: 2}, Int128{hi: 1, lo: 0}},
+		{Int128{hi: 0, lo: 2}, Int128{hi: 0, lo: 1 << 63}, Int128{hi: 1, lo: 0}},
+		// Testing the resulting sign for: 1/1, 1/-1, -1/1, -1/-1
+		{Int128{hi: 0, lo: 1}, Int128{hi: 0, lo: 1}, Int128{hi: 0, lo: 1}},
+		{Int128{hi: -1, lo: maxUint64}, Int128{hi: -1, lo: maxUint64}, Int128{hi: 0, lo: 1}},
+		{Int128{hi: -1, lo: maxUint64}, Int128{hi: 0, lo: 1}, Int128{hi: -1, lo: maxUint64}},
+		{Int128{hi: 0, lo: 1}, Int128{hi: -1, lo: maxUint64}, Int128{hi: -1, lo: maxUint64}},
+	}
+	for _, test := range tests {
+		result := test.op1.Div(test.op2)
+		if result.lo != test.expected.lo || result.hi != test.expected.hi {
+			t.Errorf("Expected %s.Div(%s) == %s, got: %s", test.op1, test.op2, test.expected, result)
+		}
+	}
+}
+
 func TestDivModInt128(t *testing.T) {
 	tests := []struct {
 		op1       Int128
