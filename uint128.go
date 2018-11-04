@@ -23,17 +23,17 @@ func (x Uint128) String() string {
 	return fmt.Sprintf("%#x%016x", x.hi, x.lo)
 }
 
+// NewUint128 returns a Uint128 from the high and low 64 bits
+func NewUint128(hi, lo uint64) Uint128 {
+	return Uint128{hi: hi, lo: lo}
+}
+
 // Uint128FromBigInt returns a Uint128 from a big.Int
 func Uint128FromBigInt(a *big.Int) (z Uint128) {
 	z.lo = a.Uint64()
 	b := new(big.Int).Rsh(a, int64Size)
 	z.hi = b.Uint64()
 	return z
-}
-
-// Uint128FromBits returns a Uint128 from the high and low 64 bits
-func Uint128FromBits(hi, lo uint64) Uint128 {
-	return Uint128{hi: hi, lo: lo}
 }
 
 // Uint128FromUint64 returns a Uint128 from a uint64

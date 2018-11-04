@@ -28,6 +28,11 @@ func (x Int128) String() string {
 	}
 }
 
+// NewInt128 returns a Int128 from the high and low 64 bits
+func NewInt128(hi int64, lo uint64) Int128 {
+	return Int128{hi: hi, lo: lo}
+}
+
 // Int128FromBigInt returns a Int128 from a big.Int
 func Int128FromBigInt(a *big.Int) (z Int128) {
 	var y Uint128
@@ -44,11 +49,6 @@ func Int128FromBigInt(a *big.Int) (z Int128) {
 		return z.Neg()
 	}
 	return z
-}
-
-// Int128FromHiLo returns a Int128 from the high and low 64 bits
-func Int128FromHiLo(hi int64, lo uint64) Int128 {
-	return Int128{hi: hi, lo: lo}
 }
 
 // Int128FromInt64 returns a Int128 from an int64
