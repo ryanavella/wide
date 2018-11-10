@@ -120,19 +120,21 @@ func (x Uint128) DivMod(d Uint128) (q, r Uint128) {
 		q.lo = 1
 		r = x.Sub(d)
 		return q, r
-	// Case 4: N and D have 64 leading zero bits
-	case x.hi == 0 && d.hi == 0:
-		q.lo = x.lo / d.lo
-		r.lo = x.lo % d.lo
-		return q, r
-	// Case 5: N and D have 64 trailing zero bits
-	case x.lo == 0 && d.lo == 0:
-		q.lo = x.hi / d.hi
-		// The following remainder calculation can probably be optimized further
-		dq := d.Mul(q)
-		r = x.Sub(dq)
-		return q, r
 	}
+	/*
+		// Case 4: N and D have 64 leading zero bits
+		case x.hi == 0 && d.hi == 0:
+			q.lo = x.lo / d.lo
+			r.lo = x.lo % d.lo
+			return q, r
+		// Case 5: N and D have 64 trailing zero bits
+		case x.lo == 0 && d.lo == 0:
+			q.lo = x.hi / d.hi
+			// The following remainder calculation can probably be optimized further
+			dq := d.Mul(q)
+			r = x.Sub(dq)
+			return q, r
+	*/
 	n := x.Len() - d.Len()
 	if n >= 0 {
 		d = d.LShiftN(n)

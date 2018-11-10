@@ -12,7 +12,7 @@ type Int128 struct {
 	lo uint64
 }
 
-// String returns a hexadecimal (string) representation of a Int128
+// String returns a hexadecimal (string) representation of an Int128
 func (x Int128) String() string {
 	switch {
 	case x.hi < 0:
@@ -28,12 +28,12 @@ func (x Int128) String() string {
 	}
 }
 
-// NewInt128 returns a Int128 from the high and low 64 bits
+// NewInt128 returns an Int128 from the high and low 64 bits
 func NewInt128(hi int64, lo uint64) Int128 {
 	return Int128{hi: hi, lo: lo}
 }
 
-// Int128FromBigInt returns a Int128 from a big.Int
+// Int128FromBigInt returns an Int128 from a big.Int
 func Int128FromBigInt(a *big.Int) (z Int128) {
 	var y Uint128
 	neg := false
@@ -51,7 +51,7 @@ func Int128FromBigInt(a *big.Int) (z Int128) {
 	return z
 }
 
-// Int128FromInt64 returns a Int128 from an int64
+// Int128FromInt64 returns an Int128 from an int64
 func Int128FromInt64(x int64) Int128 {
 	if x >= 0 {
 		return Int128{hi: 0, lo: uint64(x)}
@@ -233,14 +233,14 @@ func (x Int128) Int64() int64 {
 	return int64(x.lo)
 }
 
-// LShift returns a Int128 left-shifted by 1
+// LShift returns an Int128 left-shifted by 1
 func (x Int128) LShift() (z Int128) {
 	z.hi = int64(uint64(x.hi)<<1 | x.lo>>(int64Size-1))
 	z.lo = x.lo << 1
 	return z
 }
 
-// LShiftN returns a Int128 left-shifted by a uint (i.e. x << n)
+// LShiftN returns an Int128 left-shifted by a uint (i.e. x << n)
 func (x Int128) LShiftN(n uint) (z Int128) {
 	switch {
 	case n >= int128Size:
@@ -256,7 +256,7 @@ func (x Int128) LShiftN(n uint) (z Int128) {
 	}
 }
 
-// lShiftNActual returns a Int128 left-shifted by a uint (i.e. x << n)
+// lShiftNActual returns an Int128 left-shifted by a uint (i.e. x << n)
 //
 // Unlike LShiftN, it operates on the actual 2's complement representation
 func (x Int128) lShiftNActual(n uint) (z Int128) {
@@ -366,7 +366,7 @@ func (x Int128) Or(y Int128) (z Int128) {
 	return z
 }
 
-// RShift returns a Int128 right-shifted by 1
+// RShift returns an Int128 right-shifted by 1
 func (x Int128) RShift() (z Int128) {
 	xhi := uint64(x.hi)
 	z.hi = int64(xhi >> 1)
@@ -374,7 +374,7 @@ func (x Int128) RShift() (z Int128) {
 	return z
 }
 
-// RShiftN returns a Int128 right-shifted by a uint (i.e. x >> n)
+// RShiftN returns an Int128 right-shifted by a uint (i.e. x >> n)
 //
 // Could probably be made faster with sign extension
 func (x Int128) RShiftN(n uint) (z Int128) {
@@ -399,7 +399,7 @@ func (x Int128) RShiftN(n uint) (z Int128) {
 	return z
 }
 
-// RShift128 returns a Int128 right-shifted by a Uint128 (i.e. x >> y)
+// RShift128 returns an Int128 right-shifted by a Uint128 (i.e. x >> y)
 func (x Int128) RShift128(y Uint128) (z Int128) {
 	if y.hi != 0 || y.lo >= int128Size {
 		return x.RShiftN(int128Size)
@@ -430,7 +430,7 @@ func (x Int128) Sub(y Int128) (z Int128) {
 	return z
 }
 
-// Uint128 returns a Uint128 representation of a Int128
+// Uint128 returns a Uint128 representation of an Int128
 //
 // This function overflows silently
 func (x Int128) Uint128() (z Uint128) {
