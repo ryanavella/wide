@@ -231,16 +231,16 @@ func (x Uint128) LShift() (z Uint128) {
 func (x Uint128) LShiftN(n uint) (z Uint128) {
 	switch {
 	case n >= int128Size:
-		z.hi = 0
-		z.lo = 0
+		return z // z.hi, z.lo = 0, 0
 	case n >= int64Size:
 		z.hi = x.lo << (n - int64Size)
 		z.lo = 0
+		return z
 	default:
 		z.hi = x.hi<<n | x.lo>>(int64Size-n)
 		z.lo = x.lo << n
+		return z
 	}
-	return z
 }
 
 // Lt returns whether x is less than y
@@ -345,16 +345,16 @@ func (x Uint128) RShift() (z Uint128) {
 func (x Uint128) RShiftN(n uint) (z Uint128) {
 	switch {
 	case n >= int128Size:
-		z.hi = 0
-		z.lo = x.hi
+		return z // zhi, zlo = 0, 0
 	case n >= int64Size:
 		z.hi = 0
 		z.lo = x.hi >> (n - int64Size)
+		return z
 	default:
 		z.hi = x.hi >> n
-		z.lo = x.hi<<(int64Size-n) | x.lo>>n
+		z.lo = x.lo>>n | x.hi<<(int64Size-n)
+		return z
 	}
-	return z
 }
 
 // RShift128 returns a Uint128 right-shifted by a Uint128 (i.e. x >> y)

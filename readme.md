@@ -6,7 +6,7 @@ Licensed under the Unlicense (https://unlicense.org/)
 
 ## Scope
 
-This packge is intended for efficient and fast computations. There are no plans to support applications which require constant-time cryptographic security.
+This package is intended for efficient and fast computations. There are no plans to support applications which require constant-time cryptographic security.
 
 ## Contributions
 

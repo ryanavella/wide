@@ -11,6 +11,6 @@ const (
 // Maximum and minimum integer sizes
 const (
 	maxInt64  = 1<<63 - 1
-	minInt64  = -1<<63
+	minInt64  = -1 << 63
 	maxUint64 = 1<<64 - 1
 )

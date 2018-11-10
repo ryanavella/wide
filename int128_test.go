@@ -54,9 +54,9 @@ func TestAndInt128(t *testing.T) {
 		expected Int128
 	}{
 		{Int128{hi: 0, lo: 0}, Int128{hi: 0, lo: 0}, Int128{hi: 0, lo: 0}},
-		{Int128{hi: 0, lo: 0}, Int128{hi: maxInt64, lo: maxUint64}, Int128{hi: 0, lo: 0}},
-		{Int128{hi: maxInt64, lo: maxUint64}, Int128{hi: 0, lo: 0}, Int128{hi: 0, lo: 0}},
-		{Int128{hi: maxInt64, lo: maxUint64}, Int128{hi: maxInt64, lo: maxUint64}, Int128{hi: maxInt64, lo: maxUint64}},
+		{Int128{hi: 0, lo: 0}, Int128{hi: -1, lo: maxUint64}, Int128{hi: 0, lo: 0}},
+		{Int128{hi: -1, lo: maxUint64}, Int128{hi: 0, lo: 0}, Int128{hi: 0, lo: 0}},
+		{Int128{hi: -1, lo: maxUint64}, Int128{hi: -1, lo: maxUint64}, Int128{hi: -1, lo: maxUint64}},
 	}
 	for _, test := range tests {
 		result := test.op1.And(test.op2)
@@ -73,9 +73,9 @@ func TestAndNotInt128(t *testing.T) {
 		expected Int128
 	}{
 		{Int128{hi: 0, lo: 0}, Int128{hi: 0, lo: 0}, Int128{hi: 0, lo: 0}},
-		{Int128{hi: 0, lo: 0}, Int128{hi: maxInt64, lo: maxUint64}, Int128{hi: 0, lo: 0}},
-		{Int128{hi: maxInt64, lo: maxUint64}, Int128{hi: 0, lo: 0}, Int128{hi: maxInt64, lo: maxUint64}},
-		{Int128{hi: maxInt64, lo: maxUint64}, Int128{hi: maxInt64, lo: maxUint64}, Int128{hi: 0, lo: 0}},
+		{Int128{hi: 0, lo: 0}, Int128{hi: -1, lo: maxUint64}, Int128{hi: 0, lo: 0}},
+		{Int128{hi: -1, lo: maxUint64}, Int128{hi: 0, lo: 0}, Int128{hi: -1, lo: maxUint64}},
+		{Int128{hi: -1, lo: maxUint64}, Int128{hi: -1, lo: maxUint64}, Int128{hi: 0, lo: 0}},
 	}
 	for _, test := range tests {
 		result := test.op1.AndNot(test.op2)
@@ -258,6 +258,9 @@ func TestIsInt64Int128(t *testing.T) {
 		{Int128{hi: 0, lo: maxInt64 + 1}, false},
 		{Int128{hi: 1, lo: 0}, false},
 		{Int128{hi: maxInt64, lo: maxUint64}, false},
+		{Int128{hi: -1, lo: maxUint64}, true},
+		{Int128{hi: -1, lo: maxInt64}, false},
+		{Int128{hi: -1, lo: maxInt64+1}, true},
 	}
 	for _, test := range tests {
 		result := test.inp.IsInt64()
@@ -541,6 +544,14 @@ func TestRShiftNInt128(t *testing.T) {
 		{Int128{hi: 1, lo: 0}, 64, Int128{hi: 0, lo: 1}},
 		{Int128{hi: maxInt64, lo: maxUint64}, 126, Int128{hi: 0, lo: 1}},
 		{Int128{hi: maxInt64, lo: maxUint64}, 127, Int128{hi: 0, lo: 0}},
+
+		{Int128{hi: -1, lo: maxUint64}, 0, Int128{hi: -1, lo: maxUint64}},
+		{Int128{hi: -1, lo: maxUint64}, 1, Int128{hi: 0, lo: 0}},
+		{Int128{hi: -1, lo: maxUint64-1}, 1, Int128{hi: -1, lo: maxUint64}},
+		{Int128{hi: -1, lo: maxUint64-3}, 2, Int128{hi: -1, lo: maxUint64}},
+
+		{Int128{hi: minInt64, lo: 0}, 127, Int128{hi: -1, lo: maxUint64}},
+		{Int128{hi: minInt64, lo: 0}, 128, Int128{hi: 0, lo: 0}},
 	}
 	for _, test := range tests {
 		result := test.op1.RShiftN(test.op2)
@@ -588,6 +599,7 @@ func TestUint64Int128(t *testing.T) {
 		{Int128{hi: 1, lo: maxUint64}, maxUint64},
 		{Int128{hi: maxInt64, lo: 0}, 0},
 		{Int128{hi: maxInt64, lo: maxUint64}, maxUint64},
+		{Int128{hi: -1, lo: maxUint64}, maxUint64},
 	}
 	for _, test := range tests {
 		result := test.inp.Uint64()
@@ -604,9 +616,9 @@ func TestXorInt128(t *testing.T) {
 		expected Int128
 	}{
 		{Int128{hi: 0, lo: 0}, Int128{hi: 0, lo: 0}, Int128{hi: 0, lo: 0}},
-		{Int128{hi: 0, lo: 0}, Int128{hi: maxInt64, lo: maxUint64}, Int128{hi: maxInt64, lo: maxUint64}},
-		{Int128{hi: maxInt64, lo: maxUint64}, Int128{hi: 0, lo: 0}, Int128{hi: maxInt64, lo: maxUint64}},
-		{Int128{hi: maxInt64, lo: maxUint64}, Int128{hi: maxInt64, lo: maxUint64}, Int128{hi: 0, lo: 0}},
+		{Int128{hi: 0, lo: 0}, Int128{hi: -1, lo: maxUint64}, Int128{hi: -1, lo: maxUint64}},
+		{Int128{hi: -1, lo: maxUint64}, Int128{hi: 0, lo: 0}, Int128{hi: -1, lo: maxUint64}},
+		{Int128{hi: -1, lo: maxUint64}, Int128{hi: -1, lo: maxUint64}, Int128{hi: 0, lo: 0}},
 	}
 	for _, test := range tests {
 		result := test.op1.Xor(test.op2)

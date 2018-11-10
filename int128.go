@@ -61,7 +61,7 @@ func Int128FromInt64(x int64) Int128 {
 
 // Abs returns the absolute value of an Int128's
 func (x Int128) Abs() Int128 {
-	if x.IsNeg() {
+	if x.hi < 0 {
 		return x.Neg()
 	}
 	return x
@@ -79,14 +79,14 @@ func (x Int128) Add(y Int128) (z Int128) {
 
 // And returns the bitwise AND of two Int128's
 func (x Int128) And(y Int128) (z Int128) {
-	z.hi = int64(uint64(x.hi) & uint64(y.hi))
+	z.hi = x.hi & y.hi
 	z.lo = x.lo & y.lo
 	return z
 }
 
 // AndNot returns the bitwise AndNot of two Int128's
 func (x Int128) AndNot(y Int128) (z Int128) {
-	z.hi = int64(uint64(x.hi) &^ uint64(y.hi))
+	z.hi = x.hi &^ y.hi
 	z.lo = x.lo &^ y.lo
 	return z
 }
@@ -244,16 +244,16 @@ func (x Int128) LShift() (z Int128) {
 func (x Int128) LShiftN(n uint) (z Int128) {
 	switch {
 	case n >= int128Size:
-		z.hi = 0
-		z.lo = 0
+		return z // z.hi, z.lo = 0, 0
 	case n >= int64Size:
 		z.hi = int64(x.lo << (n - int64Size))
 		z.lo = 0
+		return z
 	default:
 		z.hi = int64(uint64(x.hi)<<n | x.lo>>(int64Size-n))
 		z.lo = x.lo << n
+		return z
 	}
-	return z
 }
 
 // lShiftNActual returns a Int128 left-shifted by a uint (i.e. x << n)
@@ -262,16 +262,16 @@ func (x Int128) LShiftN(n uint) (z Int128) {
 func (x Int128) lShiftNActual(n uint) (z Int128) {
 	switch {
 	case n >= int128Size:
-		z.hi = 0
-		z.lo = 0
+		return z // z.hi, z.lo = 0, 0
 	case n >= int64Size:
 		z.hi = int64(x.lo << (n - int64Size))
 		z.lo = 0
+		return z
 	default:
 		z.hi = int64(uint64(x.hi)<<n | x.lo>>(int64Size-n))
 		z.lo = x.lo << n
+		return z
 	}
-	return z
 }
 
 // Lt returns whether x is less than y
@@ -330,7 +330,7 @@ func (x Int128) Mul(y Int128) (z Int128) {
 
 // Nand returns the bitwise NAND of two Int128's
 func (x Int128) Nand(y Int128) (z Int128) {
-	z.hi = int64(^(uint64(x.hi) & uint64(y.hi)))
+	z.hi = ^(x.hi & y.hi)
 	z.lo = ^(x.lo & y.lo)
 	return z
 }
@@ -347,21 +347,21 @@ func (x Int128) Neg() (z Int128) {
 
 // Nor returns the bitwise NOR of two Int128's
 func (x Int128) Nor(y Int128) (z Int128) {
-	z.hi = int64(^(uint64(x.hi) | uint64(y.hi)))
+	z.hi = ^(x.hi | y.hi)
 	z.lo = ^(x.lo | y.lo)
 	return z
 }
 
 // Not returns the bitwise Not of an Int128
 func (x Int128) Not() (z Int128) {
-	z.hi = int64(^uint64(x.hi))
+	z.hi = ^x.hi
 	z.lo = ^x.lo
 	return z
 }
 
 // Or returns the bitwise OR of two Int128's
 func (x Int128) Or(y Int128) (z Int128) {
-	z.hi = int64(uint64(x.hi) | uint64(y.hi))
+	z.hi = x.hi | y.hi
 	z.lo = x.lo | y.lo
 	return z
 }
@@ -370,28 +370,37 @@ func (x Int128) Or(y Int128) (z Int128) {
 func (x Int128) RShift() (z Int128) {
 	xhi := uint64(x.hi)
 	z.hi = int64(xhi >> 1)
-	z.lo = xhi<<(int64Size-1) | x.lo>>1
+	z.lo = x.lo>>1 | xhi<<(int64Size-1)
 	return z
 }
 
 // RShiftN returns a Int128 right-shifted by a uint (i.e. x >> n)
+//
+// Could probably be made faster with sign extension
 func (x Int128) RShiftN(n uint) (z Int128) {
+	neg := false
+	if x.hi < 0 {
+		x = x.Neg()
+		neg = true
+	}
 	switch {
 	case n >= int128Size:
-		z.hi = x.hi >> (int64Size - 1) // sign extend
-		z.lo = uint64(z.hi)
+		return z // z.hi, z.lo = 0, 0
 	case n >= int64Size:
-		z.hi = x.hi >> (int64Size - 1) // sign extend
+		z.hi = 0
 		z.lo = uint64(x.hi) >> (n - int64Size)
 	default:
 		z.hi = x.hi >> n
-		z.lo = uint64(x.hi)<<(int64Size-n) | x.lo>>n
+		z.lo = x.lo>>n | uint64(x.hi)<<(int64Size-n)
+	}
+	if neg {
+		return z.Neg()
 	}
 	return z
 }
 
-// RShift28 returns a Int128 right-shifted by a Uint128 (i.e. x >> y)
-func (x Int128) RShift28(y Uint128) (z Int128) {
+// RShift128 returns a Int128 right-shifted by a Uint128 (i.e. x >> y)
+func (x Int128) RShift128(y Uint128) (z Int128) {
 	if y.hi != 0 || y.lo >= int128Size {
 		return x.RShiftN(int128Size)
 	}
@@ -439,14 +448,14 @@ func (x Int128) Uint64() uint64 {
 
 // Xor returns the bitwise XOR of two Int128's
 func (x Int128) Xor(y Int128) (z Int128) {
-	z.hi = int64(uint64(x.hi) ^ uint64(y.hi))
+	z.hi = x.hi ^ y.hi
 	z.lo = x.lo ^ y.lo
 	return z
 }
 
 // Xnor returns the bitwise XNOR of two Int128's
 func (x Int128) Xnor(y Int128) (z Int128) {
-	z.hi = int64(^(uint64(x.hi) ^ uint64(y.hi)))
+	z.hi = ^(x.hi ^ y.hi)
 	z.lo = ^(x.lo ^ y.lo)
 	return z
 }

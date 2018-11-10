@@ -457,6 +457,7 @@ func TestMulUint128(t *testing.T) {
 		{Uint128{hi: 0, lo: 5}, Uint128{hi: 0, lo: 3}, Uint128{hi: 0, lo: 15}},
 		{Uint128{hi: 3, lo: 0}, Uint128{hi: 0, lo: 5}, Uint128{hi: 15, lo: 0}},
 		{Uint128{hi: 5, lo: 0}, Uint128{hi: 0, lo: 3}, Uint128{hi: 15, lo: 0}},
+		{Uint128{hi: 0, lo: 1<<32 + 1<<31}, Uint128{hi: 0, lo: 1<<32 + 1<<31}, Uint128{hi: 2, lo: 1 << 62}},
 		{Uint128{hi: 0, lo: 1 << 63}, Uint128{hi: 0, lo: 2}, Uint128{hi: 1, lo: 0}},
 		{Uint128{hi: 0, lo: 2}, Uint128{hi: 0, lo: 1 << 63}, Uint128{hi: 1, lo: 0}},
 		{Uint128{hi: 0, lo: 0xFFFFFFFFFFFFFFFF}, Uint128{hi: 0, lo: 0xFFFFFFFFFFFFFFFF}, Uint128{hi: 0xFFFFFFFFFFFFFFFE, lo: 1}},
@@ -602,6 +603,7 @@ func TestRShiftNUint128(t *testing.T) {
 		{Uint128{hi: 1, lo: 0}, 64, Uint128{hi: 0, lo: 1}},
 		{Uint128{hi: 1 << 63, lo: 0}, 127, Uint128{hi: 0, lo: 1}},
 		{Uint128{hi: maxUint64, lo: maxUint64}, 127, Uint128{hi: 0, lo: 1}},
+		{Uint128{hi: maxUint64, lo: maxUint64}, 128, Uint128{hi: 0, lo: 0}},
 	}
 	for _, test := range tests {
 		result := test.op1.RShiftN(test.op2)
