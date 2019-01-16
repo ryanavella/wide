@@ -1,0 +1,7 @@
+* text=auto
+
+# Source files
+.gitattributes text eol=lf
+.gitignore     text eol=lf
+.gitconfig     text eol=lf
+.gitmodules    text eol=lf
