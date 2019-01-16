@@ -1,7 +1,17 @@
-# Files without extensions
+# ignore extensionless files
 *
+!*/
 !/**/
 !*.*
+
+# ignore dot-files
+.*
+
+# don't ignore these
+!/LICENSE
+!/.editorconfig
+!/.gitattributes
+!/.gitignore
 
 # Binaries
 *.exe
