@@ -1,4 +1,3 @@
-// Package wide provides implementations of Int128 and Uint128 for Go. See README.md for more information.
 package wide
 
 // Data sizes
