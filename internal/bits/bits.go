@@ -1,3 +1,4 @@
+// Package bits provides an alternative implementation of bits.Len64 from math/bits.
 package bits
 
 // Len64 returns the minimum number of bits required to represent x; the result is 0 for x == 0.
