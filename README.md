@@ -1,6 +1,6 @@
-# Wide Integers for Go
+# Wide [![](https://godoc.org/github.com/ryanavella/wide?status.svg)](https://godoc.org/github.com/ryanavella/wide)
 
-Uint128 and Int128, for scientific and mathematical applications.
+Uint128 and Int128 for Go.
 
 Licensed under the Unlicense (https://unlicense.org/)
 
@@ -30,7 +30,7 @@ func main() {
 
 ## Scope
 
-This package is intended for efficient and fast computations. There are no plans to support applications which require constant-time cryptographic security.
+This package is intended for efficient and fast computations (i.e. for scientific and mathematical applications). There are no plans to support applications which require constant-time cryptographic security.
 
 ## Contributions
 
