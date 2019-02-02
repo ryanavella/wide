@@ -11,8 +11,7 @@ import (
 
 // Uint128 is a representation of an unsigned 128-bit integer
 type Uint128 struct {
-	hi uint64
-	lo uint64
+	hi, lo uint64
 }
 
 // String returns a hexadecimal representation of a Uint128
@@ -90,6 +89,17 @@ func (x Uint128) Cmp(y Uint128) int {
 	default:
 		return 0
 	}
+}
+
+// Dec returns the predecessor of a Uint128
+func (x Uint128) Dec() (z Uint128) {
+	z.lo = x.lo - 1
+	if z.lo > x.lo {
+		z.hi = x.hi - 1
+		return z
+	}
+	z.hi = x.hi
+	return z
 }
 
 // Div returns the quotient corresponding to the provided dividend and divisor
@@ -185,6 +195,17 @@ func (x Uint128) Gte(y Uint128) bool {
 	default:
 		return false
 	}
+}
+
+// Inc returns the successor of a Uint128
+func (x Uint128) Inc() (z Uint128) {
+	z.lo = x.lo + 1
+	if z.lo == 0 {
+		z.hi = x.hi + 1
+		return z
+	}
+	z.hi = x.hi
+	return z
 }
 
 // IsInt64 checks if the Uint128 can be represented as an int64 without overflowing

@@ -120,6 +120,17 @@ func (x Int128) CmpAbs(y Int128) int {
 	return x.Cmp(y)
 }
 
+// Dec returns the predecessor of an Int128
+func (x Int128) Dec() (z Int128) {
+	z.lo = x.lo - 1
+	if z.lo > x.lo {
+		z.hi = x.hi - 1
+		return z
+	}
+	z.hi = x.hi
+	return z
+}
+
 // Div returns the quotient corresponding to the provided dividend and divisor
 //
 // Div panics on division by 0. It checks some common/faster cases before fully committing to long division. This can probably be further optimized by
@@ -186,6 +197,17 @@ func (x Int128) Gte(y Int128) bool {
 	default:
 		return false
 	}
+}
+
+// Inc returns the successor of an Int128
+func (x Int128) Inc() (z Int128) {
+	z.lo = x.lo + 1
+	if z.lo == 0 {
+		z.hi = x.hi + 1
+		return z
+	}
+	z.hi = x.hi
+	return z
 }
 
 // IsInt64 checks if the Int128 can be represented as an int64
