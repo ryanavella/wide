@@ -136,17 +136,19 @@ func (x Uint128) DivMod(d Uint128) (q, r Uint128) {
 			return q, r
 	*/
 	n := x.Len() - d.Len()
-	if n >= 0 {
-		d = d.LShiftN(n)
-		var i uint
-		for i = 0; i <= n; i++ {
-			q = q.LShift()
-			if d.Lte(x) {
-				q.lo |= 1
-				x = x.Sub(d)
-			}
-			d = d.RShift()
+	if n < 0 {
+		r = x
+		return q, r
+	}
+	d = d.LShiftN(n)
+	var i uint
+	for i = 0; i <= n; i++ {
+		q = q.LShift()
+		if d.Lte(x) {
+			q.lo |= 1
+			x = x.Sub(d)
 		}
+		d = d.RShift()
 	}
 	r = x
 	return q, r
@@ -286,14 +288,16 @@ func (x Uint128) Mod(d Uint128) (r Uint128) {
 func (x Uint128) Mul(y Uint128) (z Uint128) {
 	var i uint
 	for i = 0; i < int64Size; i++ {
-		if y.lo&(1<<i) != 0 {
-			z = z.Add(x.LShiftN(i))
+		if y.lo&(1<<i) == 0 {
+			continue
 		}
+		z = z.Add(x.LShiftN(i))
 	}
 	for i = 0; i < int64Size; i++ {
-		if y.hi&(1<<i) != 0 {
-			z = z.Add(x.LShiftN(i + int64Size))
+		if y.hi&(1<<i) == 0 {
+			continue
 		}
+		z = z.Add(x.LShiftN(i + int64Size))
 	}
 	return z
 }

@@ -315,14 +315,16 @@ func (x Int128) Mul(y Int128) (z Int128) {
 	var i uint
 	yhi := uint64(y.hi)
 	for i = 0; i < int64Size; i++ {
-		if y.lo&(1<<i) != 0 {
-			z = z.Add(x.lShiftNActual(i))
+		if y.lo&(1<<i) == 0 {
+			continue
 		}
+		z = z.Add(x.lShiftNActual(i))
 	}
 	for i = 0; i < int64Size; i++ {
-		if yhi&(1<<i) != 0 {
-			z = z.Add(x.lShiftNActual(i + int64Size))
+		if yhi&(1<<i) == 0 {
+			continue
 		}
+		z = z.Add(x.lShiftNActual(i + int64Size))
 	}
 	return z
 }
