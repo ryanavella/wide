@@ -2,7 +2,7 @@
 
 Uint128 and Int128 for Go.
 
-Licensed under the Unlicense (https://unlicense.org/)
+Wide is free and open source software distributed under the terms of both the MIT License and the Unlicense.
 
 ## Installing
 
