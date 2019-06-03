@@ -260,7 +260,7 @@ func TestIsInt64Int128(t *testing.T) {
 		{Int128{hi: maxInt64, lo: maxUint64}, false},
 		{Int128{hi: -1, lo: maxUint64}, true},
 		{Int128{hi: -1, lo: maxInt64}, false},
-		{Int128{hi: -1, lo: maxInt64+1}, true},
+		{Int128{hi: -1, lo: maxInt64 + 1}, true},
 	}
 	for _, test := range tests {
 		result := test.inp.IsInt64()
@@ -547,8 +547,8 @@ func TestRShiftNInt128(t *testing.T) {
 
 		{Int128{hi: -1, lo: maxUint64}, 0, Int128{hi: -1, lo: maxUint64}},
 		{Int128{hi: -1, lo: maxUint64}, 1, Int128{hi: 0, lo: 0}},
-		{Int128{hi: -1, lo: maxUint64-1}, 1, Int128{hi: -1, lo: maxUint64}},
-		{Int128{hi: -1, lo: maxUint64-3}, 2, Int128{hi: -1, lo: maxUint64}},
+		{Int128{hi: -1, lo: maxUint64 - 1}, 1, Int128{hi: -1, lo: maxUint64}},
+		{Int128{hi: -1, lo: maxUint64 - 3}, 2, Int128{hi: -1, lo: maxUint64}},
 
 		{Int128{hi: minInt64, lo: 0}, 127, Int128{hi: -1, lo: maxUint64}},
 		{Int128{hi: minInt64, lo: 0}, 128, Int128{hi: 0, lo: 0}},
