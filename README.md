@@ -1,4 +1,6 @@
-# Wide [![](https://godoc.org/github.com/ryanavella/wide?status.svg)](https://godoc.org/github.com/ryanavella/wide)
+[![](https://godoc.org/github.com/ryanavella/wide?status.svg)](https://godoc.org/github.com/ryanavella/wide) [![Go Report Card](https://goreportcard.com/badge/github.com/ryanavella/wide)](https://goreportcard.com/report/github.com/ryanavella/wide) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/ryanavella/wide/blob/develop/LICENSE-MIT) [![License: Unlicense](https://img.shields.io/badge/license-Unlicense-blue.svg)](https://github.com/ryanavella/wide/blob/develop/LICENSE-UNLICENSE)
+
+# Wide
 
 Uint128 and Int128 for Go.
 
